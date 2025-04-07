@@ -1,54 +1,72 @@
-# React + TypeScript + Vite
+# GitHub User Profile Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that analyzes GitHub user profiles, displaying their repositories and commit activity.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Search for GitHub users by username
+- View user profile information
+- List of public repositories with stars, forks, and language information
+- Visual representation of daily commit activity
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- TypeScript
+- ShadCN UI Components
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Prerequisites
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Node.js (v16+)
+- npm or yarn
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Setup and Installation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1. Clone this repository:
+   ```
+   git clone <repository-url>
+   cd github-profile-analyzer
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   # or
+   yarn
+   ```
+
+3. Set up ShadCN UI components:
+   ```
+   npx shadcn@latest init
+   ```
+   
+   Follow the prompts to set up ShadCN UI. When asked which components to install, select:
+   - card
+   - input
+   - button
+   - tabs
+   - alert
+
+4. Start the development server:
+   ```
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open your browser and navigate to `http://localhost:3000`
+
+
+## GitHub API Rate Limiting
+
+Please note that the GitHub API has rate limits. The application uses public endpoints with a limit of 60 requests per hour for unauthenticated requests. 
+
+For a production application, you should implement:
+1. GitHub OAuth authentication to increase rate limits
+2. Caching of API responses
+3. More efficient API request patterns
+
+## Known Limitations
+
+- The commits chart currently displays mock data for demonstration purposes
+- Limited to 100 repositories per user due to GitHub API pagination
