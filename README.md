@@ -24,8 +24,7 @@ A React application that analyzes GitHub user profiles, displaying their reposit
 
 1. Clone this repository:
    ```
-   git clone <repository-url>
-   cd github-profile-analyzer
+   git clone https://github.com/Simran903/Briahsoft_assignment.git
    ```
 
 2. Install dependencies:
