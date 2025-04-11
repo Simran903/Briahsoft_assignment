@@ -61,7 +61,7 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
     return data;
   };
 
-  // Improved commit chart rendering function with fixed blue colors
+  // Improved commit chart rendering function with explicit HEX colors
   const renderCommitChart = (): ReactElement => {
     const dates: string[] = Object.keys(commitData).sort();
     const maxCommits: number = Math.max(...Object.values(commitData), 1);
@@ -93,15 +93,17 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
     
-    // Get commit bar color based on commit count - fixed to use predefined Tailwind classes
+    // Define explicit colors for commit bars
     const getCommitBarColor = (commits: number): string => {
-      if (commits === 0) return 'bg-gray-100';
-      if (commits <= maxCommits * 0.2) return 'bg-blue-100';
-      if (commits <= maxCommits * 0.4) return 'bg-blue-200';
-      if (commits <= maxCommits * 0.6) return 'bg-blue-300';
-      if (commits <= maxCommits * 0.8) return 'bg-blue-400';
-      return 'bg-blue-500';
+      if (commits === 0) return '#f3f4f6'; // Light gray
+      if (commits <= maxCommits * 0.25) return '#bfdbfe'; // Light blue
+      if (commits <= maxCommits * 0.5) return '#93c5fd';  // Medium blue
+      if (commits <= maxCommits * 0.75) return '#60a5fa'; // Darker blue
+      return '#3b82f6'; // Darkest blue
     };
+    
+    // Color legend colors in an array for easier rendering
+    const legendColors = ['#f3f4f6', '#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6'];
     
     return (
       <div className="mt-4">
@@ -110,7 +112,7 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-500">Total Commits</div>
-                <Calendar className="h-4 w-4 text-blue-500" />
+                <Calendar className="h-4 w-4" style={{ color: '#3b82f6' }} />
               </div>
               <div className="text-2xl font-bold mt-2">{totalCommits}</div>
               <div className="text-xs text-gray-500 mt-1">Last 30 days</div>
@@ -121,7 +123,7 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-500">Most Active Day</div>
-                <Calendar className="h-4 w-4 text-blue-500" />
+                <Calendar className="h-4 w-4" style={{ color: '#3b82f6' }} />
               </div>
               <div className="text-2xl font-bold mt-2">
                 {mostActiveDay.count > 0 ? formatDate(mostActiveDay.date) : 'N/A'}
@@ -136,7 +138,7 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-500">Average Per Day</div>
-                <Calendar className="h-4 w-4 text-blue-500" />
+                <Calendar className="h-4 w-4" style={{ color: '#3b82f6' }} />
               </div>
               <div className="text-2xl font-bold mt-2">
                 {(totalCommits / dates.length).toFixed(1)}
@@ -148,7 +150,7 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
       
         <h3 className="text-lg font-medium mb-3">Commit Activity (Last 30 Days)</h3>
         
-        <div className="bg-gray-50 p-4 rounded-lg border">
+        <div style={{ background: '#f9fafb', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}>
           <div className="flex flex-col">
             {/* Weekly labels */}
             <div className="flex justify-between mb-2 text-xs text-gray-500">
@@ -159,14 +161,13 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
               ))}
             </div>
             
-            {/* Commit chart */}
+            {/* Commit chart with inline styles */}
             <div className="flex items-end h-40 gap-1">
               {dates.map(date => {
                 const commits = commitData[date];
                 const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });
-                const isWeekend = ['Sat', 'Sun'].includes(dayName);
-                const barColor = isWeekend ? 'bg-blue-200' : getCommitBarColor(commits);
-                const barHeight = Math.max(5, (commits / maxCommits) * 100);
+                const barColor = getCommitBarColor(commits);
+                const barHeight = commits === 0 ? 0 : Math.max(5, (commits / maxCommits) * 100);
                 
                 return (
                   <div key={date} className="flex-1 flex flex-col items-center group">
@@ -174,8 +175,14 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
                       {commits} on {formatDate(date)} ({dayName})
                     </div>
                     <div 
-                      className={`w-full rounded ${barColor} hover:ring-2 hover:ring-blue-500 transition-all`}
-                      style={{ height: `${barHeight}%` }}
+                      style={{
+                        background: barColor,
+                        height: `${barHeight}%`,
+                        width: '100%',
+                        borderRadius: '0.25rem',
+                        border: '1px solid rgba(0,0,0,0.1)'
+                      }}
+                      className="hover:ring-2 hover:ring-blue-500 transition-all"
                     ></div>
                   </div>
                 );
@@ -194,14 +201,24 @@ const UserProfileAnalyzer: FC<UserProfileAnalyzerProps> = () => {
             </div>
           </div>
           
-          {/* Color legend */}
+          {/* FIXED: Color legend that matches GitHub's style exactly */}
           <div className="mt-4 flex items-center justify-end">
             <div className="text-xs text-gray-500 mr-2">Fewer</div>
-            <div className="bg-blue-100 w-4 h-4 rounded"></div>
-            <div className="bg-blue-200 w-4 h-4 rounded"></div>
-            <div className="bg-blue-300 w-4 h-4 rounded"></div>
-            <div className="bg-blue-400 w-4 h-4 rounded"></div>
-            <div className="bg-blue-500 w-4 h-4 rounded"></div>
+            <div className="flex items-center" style={{ height: '10px' }}>
+              {legendColors.map((color, index) => (
+                <div 
+                  key={`legend-${index}`}
+                  style={{
+                    background: color,
+                    width: '15px',
+                    height: '10px',
+                    display: 'inline-block',
+                    margin: '0', // No margin between blocks
+                    border: '0.5px solid rgba(27, 31, 36, 0.06)' // Very subtle border
+                  }}
+                ></div>
+              ))}
+            </div>
             <div className="text-xs text-gray-500 ml-2">More</div>
           </div>
         </div>
